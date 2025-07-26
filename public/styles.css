@@ -111,7 +111,7 @@ body {
     right: 0;
     bottom: 0;
     padding: var(--spacing-lg);
-    padding-bottom: 100px; /* Space for fixed buttons */
+    padding-bottom: 120px; /* Extra space for fixed buttons */
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -217,7 +217,7 @@ body {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     margin-bottom: var(--spacing-xl);
-    padding-bottom: var(--spacing-sm);
+    padding-bottom: 120px; /* Extra space for fixed buttons */
     max-height: calc(100vh - 200px);
 }
 
