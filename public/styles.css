@@ -509,7 +509,7 @@ body {
     display: flex;
     gap: var(--spacing-md);
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 20px);
+    bottom: calc(env(safe-area-inset-bottom) + 70px);
     left: 20px;
     right: 20px;
     padding: var(--spacing-md);
@@ -574,14 +574,14 @@ body {
 /* Mobile viewport adjustments */
 @supports (height: 100dvh) {
     .action-buttons {
-        bottom: calc(env(safe-area-inset-bottom) + 2vh);
+        bottom: calc(env(safe-area-inset-bottom) + 80px);
     }
 }
 
 /* Extra spacing for very short screens */
 @media (max-height: 600px) {
     .action-buttons {
-        bottom: calc(env(safe-area-inset-bottom) + 15px);
+        bottom: calc(env(safe-area-inset-bottom) + 60px);
         padding: var(--spacing-sm);
     }
     
@@ -594,7 +594,7 @@ body {
 /* Extra spacing for very tall screens */
 @media (min-height: 800px) {
     .action-buttons {
-        bottom: calc(env(safe-area-inset-bottom) + 30px);
+        bottom: calc(env(safe-area-inset-bottom) + 80px);
     }
 }
 
