@@ -2,7 +2,7 @@
   "name": "Date Night App",
   "short_name": "DateNight",
   "description": "Aplikácia pre výber obsahu na date night",
-  "version": "2.4",
+  "version": "2.5",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fef7f0",

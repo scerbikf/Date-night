@@ -1,7 +1,7 @@
 import categories from './categories.js';
 
 // App version for cache busting
-const APP_VERSION = '2.4';
+const APP_VERSION = '2.5';
 console.log(`Date Night App v${APP_VERSION} loaded`);
 
 class DateNightApp {

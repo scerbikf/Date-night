@@ -146,6 +146,7 @@ body {
 .app-icon {
     font-size: 10rem;
     margin-bottom: var(--spacing-lg);
+    color: var(--primary-color);
     filter: drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3));
     animation: heartBeat 2s ease-in-out infinite;
 }
