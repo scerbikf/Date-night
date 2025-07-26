@@ -144,10 +144,18 @@ body {
 }
 
 .app-icon {
-    font-size: 10rem;
+    font-size: 4rem;
     margin-bottom: var(--spacing-lg);
-    color: var(--primary-color);
-    filter: drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3));
+    color: white;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    width: 120px;
+    height: 120px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg) auto;
+    box-shadow: 0 8px 32px rgba(236, 72, 153, 0.3);
     animation: heartBeat 2s ease-in-out infinite;
 }
 
@@ -443,13 +451,14 @@ body {
     display: flex;
     gap: var(--spacing-md);
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
     padding: var(--spacing-lg);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-top: 1px solid var(--border);
+    border-radius: var(--border-radius);
     z-index: 100;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
 }
