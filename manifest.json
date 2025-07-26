@@ -4,8 +4,8 @@
   "description": "Aplikácia pre výber obsahu na date night",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#6366f1",
+  "background_color": "#fef7f0",
+  "theme_color": "#ec4899",
   "orientation": "portrait",
   "icons": [
     {

@@ -105,11 +105,11 @@ class DateNightApp {
     updateNavigation(screenName) {
         const titles = {
             welcome: 'Date Night',
-            film: 'Výber filmu',
-            dish: 'Hlavné jedlo',
-            snacks: 'Občerstvenie',
-            drinks: 'Nápoje',
-            final: 'Hotovo!'
+            film: '🎬 Filmy',
+            dish: '🍽️ Hlavné jedlo',
+            snacks: '🍿 Občerstvenie',
+            drinks: '🥂 Nápoje',
+            final: '💕 Hotovo!'
         };
 
         this.elements.appTitle.textContent = titles[screenName];
