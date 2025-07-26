@@ -1,13 +1,10 @@
 const categories = [
     {
         id: 1,
-        name: 'Movies',
+        name: 'What to watch',
         items: [
-            'Action',
-            'Comedy',
-            'Drama',
-            'Horror',
-            'Romantic'
+            'Naruto',
+            'Oppenheimer'
         ]
     },
     {
