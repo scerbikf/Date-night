@@ -10,7 +10,36 @@ const DATA_FILE = path.join(__dirname, 'evening-selections.json');
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Custom middleware for cache control
+app.use((req, res, next) => {
+    // Don't cache API endpoints
+    if (req.path.startsWith('/api/')) {
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
+    }
+    // Don't cache files with version parameters
+    else if (req.query.v) {
+        res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.set('Pragma', 'no-cache');
+        res.set('Expires', '0');
+    }
+    // Cache static files for a short time
+    else if (req.path.match(/\.(css|js|png|jpg|jpeg|gif|ico|svg)$/)) {
+        res.set('Cache-Control', 'public, max-age=300'); // 5 minutes
+    }
+    next();
+});
+
 app.use(express.static('public'));
+app.use(express.static('.', { 
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js') || path.endsWith('.css')) {
+            res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        }
+    }
+}));
 
 // Serve the main app
 app.get('/', (req, res) => {

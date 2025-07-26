@@ -1,7 +1,12 @@
 import categories from './categories.js';
 
+// App version for cache busting
+const APP_VERSION = '2.1';
+console.log(`Date Night App v${APP_VERSION} loaded`);
+
 class DateNightApp {
     constructor() {
+        this.version = APP_VERSION;
         this.currentScreen = 'welcome';
         this.selections = {
             films: [],
