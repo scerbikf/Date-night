@@ -43,8 +43,8 @@ body {
 
 .app-container {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
     max-width: 428px;
     margin: 0 auto;
     background: var(--surface);
@@ -98,20 +98,16 @@ body {
 
 /* Main Content */
 .app-main {
-    flex: 1;
-    position: relative;
+    display: grid;
+    grid-template-rows: 1fr;
     overflow: hidden;
-    min-height: calc(100vh - 80px);
+    position: relative;
 }
 
 .screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    grid-row: 1;
+    grid-column: 1;
     padding: var(--spacing-lg);
-    padding-bottom: 120px; /* Extra space for fixed buttons */
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -119,8 +115,6 @@ body {
     flex-direction: column;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    height: 100vh;
-    max-height: 100vh;
 }
 
 .screen.active {
@@ -261,31 +255,7 @@ body {
     flex: 1;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    margin-bottom: var(--spacing-xl);
-    padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* Space for fixed buttons */
-    max-height: calc(100vh - 180px);
-}
-
-/* Mobile viewport adjustments for grid */
-@supports (height: 100dvh) {
-    .selection-grid {
-        max-height: calc(100dvh - 180px);
-        padding-bottom: calc(90px + env(safe-area-inset-bottom));
-    }
-}
-
-@media (max-height: 600px) {
-    .selection-grid {
-        padding-bottom: calc(80px + env(safe-area-inset-bottom));
-        max-height: calc(100vh - 140px);
-    }
-}
-
-@media (min-height: 800px) {
-    .selection-grid {
-        padding-bottom: calc(100px + env(safe-area-inset-bottom));
-        max-height: calc(100vh - 200px);
-    }
+    margin-bottom: var(--spacing-md);
 }
 
 .selection-item {
@@ -506,54 +476,57 @@ body {
 
 /* Action Buttons */
 .action-buttons {
-    display: flex;
-    gap: 0;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: var(--spacing-md) 0 calc(env(safe-area-inset-bottom) + var(--spacing-md)) 0;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
     z-index: 1000;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    min-height: calc(56px + env(safe-area-inset-bottom) + var(--spacing-lg));
+    display: flex;
+    gap: 0;
+    padding: var(--spacing-lg) var(--spacing-lg) calc(env(safe-area-inset-bottom) + var(--spacing-lg)) var(--spacing-lg);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .action-buttons .primary-button {
     flex: 1;
-    padding: var(--spacing-md) var(--spacing-lg);
-    font-size: 1.1rem;
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 1rem;
     font-weight: 600;
-    background: linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #ff6b9d 100%);
+    background: linear-gradient(135deg, #ec4899, #f472b6);
     color: white;
     border: none;
-    border-radius: 0;
-    box-shadow: none;
-    transition: all 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.25);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
     cursor: pointer;
     position: relative;
     overflow: hidden;
     min-height: 48px;
+    font-family: inherit;
+    letter-spacing: 0.025em;
 }
 
 .action-buttons .primary-button:hover {
-    background: linear-gradient(135deg, #db2777 0%, #ec4899 50%, #f472b6 100%);
-    transform: none;
-    box-shadow: none;
+    background: linear-gradient(135deg, #db2777, #ec4899);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35);
 }
 
 .action-buttons .primary-button:active {
-    background: linear-gradient(135deg, #be185d 0%, #db2777 50%, #ec4899 100%);
-    transform: none;
+    background: linear-gradient(135deg, #be185d, #db2777);
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .action-buttons .primary-button:disabled {
-    background: #d1d5db;
+    background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
     color: #9ca3af;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     cursor: not-allowed;
     transform: none;
 }
