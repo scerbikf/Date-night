@@ -151,22 +151,27 @@
 
         async function loadData() {
             try {
-                console.log('Loading data from /api/evenings...');
-                const response = await fetch('/api/evenings');
+                console.log('Loading data from localStorage...');
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                // Try to load from localStorage
+                const data = localStorage.getItem('dateNightHistory');
+                let evenings = [];
+                
+                if (data) {
+                    evenings = JSON.parse(data);
+                } else {
+                    console.log('No data found in localStorage');
                 }
                 
-                const data = await response.json();
-                console.log('Loaded data:', data);
+                console.log('Loaded data:', evenings);
                 
-                displayStats(data);
-                displaySelections(data);
+                displayStats(evenings);
+                displaySelections(evenings);
             } catch (error) {
                 console.error('Error loading data:', error);
                 document.getElementById('selections-container').innerHTML = 
-                    `<div class="no-data">Chyba pri načítaní dát: ${error.message}</div>`;
+                    `<div class="no-data">Chyba pri načítaní dát: ${error.message}<br><br>
+                    <small>Poznámka: Admin rozhranie funguje len lokálne. Dáta sú uložené v localStorage browsera.</small></div>`;
                 document.getElementById('stats').innerHTML = 
                     `<h2>Štatistiky</h2><p>Chyba pri načítaní dát</p>`;
             }

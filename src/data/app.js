@@ -1,7 +1,7 @@
 import categories from './categories.js';
 
 // App version for cache busting
-const APP_VERSION = '2.2';
+const APP_VERSION = '2.3';
 console.log(`Date Night App v${APP_VERSION} loaded`);
 
 class DateNightApp {
@@ -268,49 +268,34 @@ class DateNightApp {
 
     async saveData() {
         const data = {
+            id: Date.now().toString(),
             timestamp: new Date().toISOString(),
             selections: this.selections,
             userAgent: navigator.userAgent
         };
 
         try {
-            // Save to localStorage as backup
-            localStorage.setItem('dateNightSelections', JSON.stringify(data));
-            
-            // Try to save to external service (replace with your actual endpoint)
-            await this.sendToDatabase(data);
-            
-            console.log('Data saved successfully:', data);
-            // Údaje sa pošlú do admin rozhrania automaticky
-        } catch (error) {
-            console.error('Error saving data:', error);
-            // Backup je uložený lokálne
-        }
-    }
-
-    async sendToDatabase(data) {
-        // Use local API endpoint
-        const endpoint = '/api/save-evening';
-        
-        try {
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Save to localStorage
+            let savedData = [];
+            const existing = localStorage.getItem('dateNightHistory');
+            if (existing) {
+                savedData = JSON.parse(existing);
             }
             
-            const result = await response.json();
-            console.log('Successfully saved to database:', result);
-            return result;
+            // Add new entry
+            savedData.push(data);
+            
+            // Keep only last 50 entries
+            if (savedData.length > 50) {
+                savedData = savedData.slice(-50);
+            }
+            
+            localStorage.setItem('dateNightHistory', JSON.stringify(savedData));
+            localStorage.setItem('dateNightSelections', JSON.stringify(data));
+            
+            console.log('Data saved successfully:', data);
         } catch (error) {
-            console.error('Failed to save to database:', error);
-            throw error;
+            console.error('Error saving data:', error);
         }
     }
 
