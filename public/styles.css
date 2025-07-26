@@ -42,7 +42,7 @@ body {
 }
 
 .app-container {
-    min-height: 100vh;
+    min-height: 150vh;
     display: flex;
     flex-direction: column;
     max-width: 428px;
