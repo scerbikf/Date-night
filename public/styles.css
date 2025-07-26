@@ -507,45 +507,46 @@ body {
 /* Action Buttons */
 .action-buttons {
     display: flex;
-    gap: var(--spacing-md);
+    gap: 0;
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 70px);
-    left: 20px;
-    right: 20px;
-    padding: var(--spacing-md);
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: env(safe-area-inset-bottom) 0 0 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
     z-index: 1000;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(236, 72, 153, 0.2);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .action-buttons .primary-button {
     flex: 1;
-    padding: 16px 24px;
+    padding: var(--spacing-lg);
     font-size: 1.1rem;
     font-weight: 600;
     background: linear-gradient(135deg, #ec4899 0%, #f472b6 50%, #ff6b9d 100%);
     color: white;
     border: none;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.3);
+    border-radius: 0;
+    box-shadow: none;
     transition: all 0.3s ease;
     text-align: center;
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    min-height: 52px;
+    min-height: 56px;
 }
 
 .action-buttons .primary-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(236, 72, 153, 0.4);
+    background: linear-gradient(135deg, #db2777 0%, #ec4899 50%, #f472b6 100%);
+    transform: none;
+    box-shadow: none;
 }
 
 .action-buttons .primary-button:active {
-    transform: translateY(0);
+    background: linear-gradient(135deg, #be185d 0%, #db2777 50%, #ec4899 100%);
+    transform: none;
 }
 
 .action-buttons .primary-button:disabled {
@@ -573,28 +574,25 @@ body {
 
 /* Mobile viewport adjustments */
 @supports (height: 100dvh) {
-    .action-buttons {
-        bottom: calc(env(safe-area-inset-bottom) + 80px);
+    .selection-grid {
+        max-height: calc(100dvh - 180px);
+        padding-bottom: calc(90px + env(safe-area-inset-bottom));
     }
 }
 
 /* Extra spacing for very short screens */
 @media (max-height: 600px) {
-    .action-buttons {
-        bottom: calc(env(safe-area-inset-bottom) + 60px);
-        padding: var(--spacing-sm);
-    }
-    
-    .action-buttons .primary-button {
-        padding: 14px 20px;
-        min-height: 48px;
+    .selection-grid {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
+        max-height: calc(100vh - 140px);
     }
 }
 
 /* Extra spacing for very tall screens */
 @media (min-height: 800px) {
-    .action-buttons {
-        bottom: calc(env(safe-area-inset-bottom) + 80px);
+    .selection-grid {
+        padding-bottom: calc(100px + env(safe-area-inset-bottom));
+        max-height: calc(100vh - 200px);
     }
 }
 
