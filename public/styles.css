@@ -225,6 +225,7 @@ body {
 .screen-header {
     margin-bottom: var(--spacing-xl);
     text-align: center;
+    display: none;
 }
 
 .screen-header h2 {
