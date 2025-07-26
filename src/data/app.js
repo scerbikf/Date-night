@@ -1,4 +1,5 @@
 import categories from './categories.js';
+import TMDBService from './tmdb-service.js';
 
 // App version for cache busting
 const APP_VERSION = '3.0';
@@ -8,7 +9,10 @@ class DateNightApp {
     constructor() {
         this.version = APP_VERSION;
         this.currentScreen = 'welcome';
+        this.tmdb = new TMDBService();
         this.selections = {
+            platforms: [],
+            genres: [],
             films: [],
             dishes: [],
             snacks: [],
@@ -17,6 +21,8 @@ class DateNightApp {
         
         this.screens = {
             welcome: document.getElementById('welcome-screen'),
+            platform: document.getElementById('platform-screen'),
+            genre: document.getElementById('genre-screen'),
             film: document.getElementById('film-screen'),
             dish: document.getElementById('dish-screen'),
             snacks: document.getElementById('snacks-screen'),
@@ -28,6 +34,12 @@ class DateNightApp {
             appTitle: document.getElementById('app-title'),
             backBtn: document.getElementById('back-btn'),
             startBtn: document.getElementById('start-btn'),
+            
+            platformGrid: document.getElementById('platform-grid'),
+            platformNextBtn: document.getElementById('platform-next-btn'),
+            
+            genreGrid: document.getElementById('genre-grid'),
+            genreNextBtn: document.getElementById('genre-next-btn'),
             
             filmGrid: document.getElementById('film-grid'),
             filmNextBtn: document.getElementById('film-next-btn'),
@@ -57,7 +69,7 @@ class DateNightApp {
     setupEventListeners() {
         // Start button
         this.elements.startBtn.addEventListener('click', () => {
-            this.showScreen('film');
+            this.showScreen('platform');
         });
 
         // Back button
@@ -65,19 +77,32 @@ class DateNightApp {
             this.goBack();
         });
 
-        // Next buttons
+        // Platform buttons
+        this.elements.platformNextBtn.addEventListener('click', () => {
+            this.showScreen('genre');
+        });
+
+        // Genre buttons
+        this.elements.genreNextBtn.addEventListener('click', async () => {
+            await this.loadMoviesAndShowFilmScreen();
+        });
+
+        // Film buttons
         this.elements.filmNextBtn.addEventListener('click', () => {
             this.showScreen('dish');
         });
 
+        // Dish buttons
         this.elements.dishNextBtn.addEventListener('click', () => {
             this.showScreen('snacks');
         });
 
+        // Snacks buttons
         this.elements.snacksNextBtn.addEventListener('click', () => {
             this.showScreen('drinks');
         });
 
+        // Drinks buttons
         this.elements.drinksFinishBtn.addEventListener('click', () => {
             this.finishSelection();
         });
@@ -107,6 +132,8 @@ class DateNightApp {
     updateNavigation(screenName) {
         const titles = {
             welcome: 'Date Night',
+            platform: '📺 Platformy',
+            genre: '🎭 Žánre',
             film: '🎬 Filmy',
             dish: '🍽️ Hlavné jedlo',
             snacks: '🍿 Občerstvenie',
@@ -126,7 +153,9 @@ class DateNightApp {
 
     goBack() {
         const navigation = {
-            film: 'welcome',
+            platform: 'welcome',
+            genre: 'platform',
+            film: 'genre',
             dish: 'film',
             snacks: 'dish',
             drinks: 'snacks'
@@ -139,10 +168,141 @@ class DateNightApp {
     }
 
     renderGrids() {
+        this.renderPlatformGrid();
+        this.renderGenreGrid();
         this.renderFilmGrid();
         this.renderDishGrid();
         this.renderSnacksGrid();
         this.renderDrinksGrid();
+    }
+
+    async renderPlatformGrid() {
+        this.elements.platformGrid.innerHTML = '';
+        const platforms = this.tmdb.getPlatforms();
+        
+        platforms.forEach(platform => {
+            const element = this.createPlatformItem(platform);
+            this.elements.platformGrid.appendChild(element);
+        });
+    }
+
+    async renderGenreGrid() {
+        this.elements.genreGrid.innerHTML = '';
+        
+        // Add "All genres" option first
+        const allGenresElement = this.createGenreItem({ id: 'all', name: 'Všetky žánre' });
+        this.elements.genreGrid.appendChild(allGenresElement);
+        
+        const genres = await this.tmdb.getGenres();
+        
+        genres.forEach(genre => {
+            const element = this.createGenreItem(genre);
+            this.elements.genreGrid.appendChild(element);
+        });
+    }
+
+    createPlatformItem(platform) {
+        const element = document.createElement('div');
+        element.className = `selection-item platform-item ${platform.id}`;
+        element.innerHTML = `
+            <div class="platform-logo">${platform.logo}</div>
+            <div>${platform.name}</div>
+        `;
+        
+        element.addEventListener('click', () => {
+            this.toggleSelection(platform.id, 'platforms', element);
+        });
+        
+        return element;
+    }
+
+    createGenreItem(genre) {
+        const element = document.createElement('div');
+        element.className = 'selection-item genre-item';
+        element.textContent = genre.name;
+        
+        element.addEventListener('click', () => {
+            this.toggleSelection(genre.id, 'genres', element);
+        });
+        
+        return element;
+    }
+
+    async loadMoviesAndShowFilmScreen() {
+        if (this.selections.platforms.length === 0 && this.selections.genres.length === 0) {
+            alert('Vyberte aspoň jednu platformu alebo žáner');
+            return;
+        }
+
+        // Show loading
+        this.elements.genreNextBtn.textContent = 'Načítavam filmy...';
+        this.elements.genreNextBtn.disabled = true;
+
+        try {
+            // If "All genres" is selected, pass empty array to get all genres
+            const genresToSearch = this.selections.genres.includes('all') ? [] : this.selections.genres;
+            
+            const result = await this.tmdb.discoverMovies(
+                this.selections.platforms,
+                genresToSearch
+            );
+
+            // Convert TMDB movies to our format
+            this.movieData = result.movies.map(movie => this.tmdb.formatMovie(movie));
+            
+            // Render movies in film grid
+            this.renderMovieGrid();
+            
+            // Show film screen
+            this.showScreen('film');
+            
+        } catch (error) {
+            console.error('Error loading movies:', error);
+            alert('Chyba pri načítavaní filmov. Skúste to znova.');
+        } finally {
+            // Reset button
+            this.elements.genreNextBtn.textContent = 'Nájsť filmy →';
+            this.elements.genreNextBtn.disabled = false;
+        }
+    }
+
+    renderMovieGrid() {
+        this.elements.filmGrid.innerHTML = '';
+        
+        if (!this.movieData || this.movieData.length === 0) {
+            this.elements.filmGrid.innerHTML = '<p>Nenašli sa žiadne filmy pre vybrané kritériá.</p>';
+            return;
+        }
+
+        this.movieData.slice(0, 20).forEach(movie => { // Show first 20 movies
+            const element = this.createMovieItem(movie);
+            this.elements.filmGrid.appendChild(element);
+        });
+    }
+
+    createMovieItem(movie) {
+        const element = document.createElement('div');
+        element.className = 'selection-item movie-item';
+        
+        const rating = movie.voteAverage ? `⭐ ${movie.voteAverage.toFixed(1)}` : '';
+        
+        element.innerHTML = `
+            <div class="movie-info">
+                <div class="movie-title">${movie.title}</div>
+                ${rating ? `<div class="movie-rating">${rating}</div>` : ''}
+            </div>
+        `;
+        
+        if (movie.posterPath) {
+            element.style.backgroundImage = `url(${movie.posterPath})`;
+            element.classList.add('has-poster');
+        }
+        
+        element.addEventListener('click', () => {
+            this.toggleSelection(movie.title, 'films', element);
+        });
+        
+        return element;
     }
 
     renderFilmGrid() {
@@ -202,16 +362,60 @@ class DateNightApp {
     }
 
     toggleSelection(item, category, element) {
-        const index = this.selections[category].indexOf(item);
-        
-        if (index > -1) {
-            // Remove from selection
-            this.selections[category].splice(index, 1);
-            element.classList.remove('selected');
+        // Special handling for "All genres"
+        if (category === 'genres' && item === 'all') {
+            const allSelected = element.classList.contains('selected');
+            
+            if (allSelected) {
+                // Deselect "All genres"
+                this.selections[category] = [];
+                element.classList.remove('selected');
+                // Deselect all other genre items
+                document.querySelectorAll('#genre-grid .selection-item:not(:first-child)').forEach(el => {
+                    el.classList.remove('selected');
+                });
+            } else {
+                // Select "All genres" - clear other selections
+                this.selections[category] = ['all'];
+                element.classList.add('selected');
+                // Deselect all other genre items
+                document.querySelectorAll('#genre-grid .selection-item:not(:first-child)').forEach(el => {
+                    el.classList.remove('selected');
+                });
+            }
+        } else if (category === 'genres' && item !== 'all') {
+            // Deselect "All genres" if selecting specific genre
+            const allGenresElement = document.querySelector('#genre-grid .selection-item:first-child');
+            if (allGenresElement && allGenresElement.classList.contains('selected')) {
+                allGenresElement.classList.remove('selected');
+                const allIndex = this.selections[category].indexOf('all');
+                if (allIndex > -1) {
+                    this.selections[category].splice(allIndex, 1);
+                }
+            }
+            
+            // Normal toggle for specific genre
+            const index = this.selections[category].indexOf(item);
+            if (index > -1) {
+                this.selections[category].splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                this.selections[category].push(item);
+                element.classList.add('selected');
+            }
         } else {
-            // Add to selection
-            this.selections[category].push(item);
-            element.classList.add('selected');
+            // Normal toggle for other categories
+            const index = this.selections[category].indexOf(item);
+            
+            if (index > -1) {
+                // Remove from selection
+                this.selections[category].splice(index, 1);
+                element.classList.remove('selected');
+            } else {
+                // Add to selection
+                this.selections[category].push(item);
+                element.classList.add('selected');
+            }
         }
 
         this.updateNextButton(category);
@@ -219,6 +423,8 @@ class DateNightApp {
 
     updateNextButton(category) {
         const buttons = {
+            platforms: this.elements.platformNextBtn,
+            genres: this.elements.genreNextBtn,
             films: this.elements.filmNextBtn,
             dishes: this.elements.dishNextBtn,
             snacks: this.elements.snacksNextBtn,
@@ -303,6 +509,8 @@ class DateNightApp {
 
     resetApp() {
         this.selections = {
+            platforms: [],
+            genres: [],
             films: [],
             dishes: [],
             snacks: [],
@@ -313,6 +521,8 @@ class DateNightApp {
         this.showScreen('welcome');
         
         // Reset button states
+        this.elements.platformNextBtn.disabled = true;
+        this.elements.genreNextBtn.disabled = true;
         this.elements.filmNextBtn.disabled = true;
         this.elements.dishNextBtn.disabled = true;
         this.elements.snacksNextBtn.disabled = true;

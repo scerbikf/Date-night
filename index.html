@@ -39,12 +39,41 @@
                 </div>
             </div>
 
+            <!-- Platform Selection Screen -->
+            <div id="platform-screen" class="screen">
+                <div class="screen-header">
+                    <h2>📺 Streamovacie platformy</h2>
+                    <p>Vyberte kde chcete sledovať filmy</p>
+                </div>
+                
+                <div id="platform-grid" class="selection-grid platform-grid"></div>
+                
+                <div class="action-buttons">
+                    <button id="platform-next-btn" class="primary-button" disabled>Ďalej →</button>
+                </div>
+            </div>
+
+            <!-- Genre Selection Screen -->
+            <div id="genre-screen" class="screen">
+                <div class="screen-header">
+                    <h2>🎭 Žánre</h2>
+                    <p>Vyberte žánre ktoré sa vám páčia</p>
+                </div>
+                
+                <div id="genre-grid" class="selection-grid genre-grid"></div>
+                
+                <div class="action-buttons">
+                    <button id="genre-next-btn" class="primary-button" disabled>Ďalej →</button>
+                </div>
+            </div>
+
             <!-- Film Selection Screen -->
             <div id="film-screen" class="screen">
                 <div class="screen-header">
                     <h2>🎬 Filmy</h2>
+                    <p>Založené na vašom výbere</p>
                 </div>
-                <div id="film-grid" class="selection-grid"></div>
+                <div id="film-grid" class="selection-grid film-grid"></div>
                 <div class="action-buttons">
                     <button id="film-next-btn" class="primary-button" disabled>Ďalej →</button>
                 </div>
@@ -54,6 +83,7 @@
             <div id="dish-screen" class="screen">
                 <div class="screen-header">
                     <h2>🍽️ Hlavné jedlo</h2>
+                    <p>Čo si dáte k filmu?</p>
                 </div>
                 <div id="dish-grid" class="selection-grid"></div>
                 <div class="action-buttons">
@@ -65,6 +95,7 @@
             <div id="snacks-screen" class="screen">
                 <div class="screen-header">
                     <h2>🍿 Občerstvenie</h2>
+                    <p>Niečo na pochutnávanie</p>
                 </div>
                 <div id="snacks-grid" class="selection-grid"></div>
                 <div class="action-buttons">
@@ -75,7 +106,8 @@
             <!-- Drinks Selection Screen -->
             <div id="drinks-screen" class="screen">
                 <div class="screen-header">
-                    <h2>🥂 Nápoje</h2>
+                    <h2>🥤 Nápoje</h2>
+                    <p>Na doplnenie atmosféry</p>
                 </div>
                 <div id="drinks-grid" class="selection-grid"></div>
                 <div class="action-buttons">
@@ -89,9 +121,9 @@
                     <div class="pulsing-heart">💕</div>
                     <h2>Náš večer je pripravený!</h2>
                     <div id="final-summary" class="final-summary"></div>
-                    <!-- <div class="result-actions">
-                        <button id="start-over-btn" class="primary-button">Nový večer</button>
-                    </div> -->
+                    <div class="result-actions">
+                        <button id="start-over-btn" class="secondary-button">Nový večer</button>
+                    </div>
                 </div>
             </div>
         </main>

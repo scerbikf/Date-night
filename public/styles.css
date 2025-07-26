@@ -220,7 +220,8 @@ body {
 .screen-header {
     margin-bottom: var(--spacing-xl);
     text-align: center;
-    display: none;
+    display: block;
+    position: relative;
 }
 
 .screen-header h2 {
@@ -229,6 +230,14 @@ body {
     color: var(--text-primary);
     margin-bottom: var(--spacing-md);
 }
+
+.screen-header p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+}
+
+/* Skip Button - Removed */
 
 .progress-bar {
     width: 100%;
@@ -256,6 +265,225 @@ body {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     margin-bottom: var(--spacing-md);
+}
+
+/* Platform & Genre Screen Specific */
+.selection-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.section h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    padding: 0 var(--spacing-xs);
+}
+
+.platform-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+.genre-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--spacing-xs);
+    margin-bottom: 0;
+}
+
+/* Film Grid - 2 columns with movie posters */
+.film-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: 0;
+}
+
+/* Platform items with clean styling */
+.platform-item {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    position: relative;
+    color: var(--text-primary);
+}
+
+.platform-item .platform-logo {
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.platform-item:hover {
+    border-color: var(--primary-color);
+    background: var(--surface-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.platform-item.selected {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* Genre items - smaller and more compact */
+.genre-item {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.platform-item:hover,
+.genre-item:hover {
+    border-color: var(--primary-color);
+    background: var(--surface-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.platform-item.selected,
+.genre-item.selected {
+    border-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* Movie items with posters */
+.movie-item {
+    position: relative;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    height: 200px;
+    overflow: hidden;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    border: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-item:hover {
+    border-color: var(--primary-color);
+}
+
+.movie-item.selected {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
+}
+
+.movie-item.has-poster {
+    background-color: #1a1a1a;
+    background-size: cover;
+    background-position: center;
+}
+
+.movie-item.has-poster::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent 40%, rgba(0, 0, 0, 0.9) 100%);
+    z-index: 1;
+}
+
+.movie-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    padding: var(--spacing-sm);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.7) 70%, transparent 100%);
+    min-height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.movie-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.3;
+    margin-bottom: var(--spacing-xs);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.movie-rating {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Movie items without posters */
+.movie-item:not(.has-poster) {
+    background: var(--surface);
+    color: var(--text-primary);
+    text-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.movie-item:not(.has-poster) .movie-info {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.movie-item:not(.has-poster) .movie-title {
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.movie-item:not(.has-poster) .movie-rating {
+    color: var(--text-secondary);
 }
 
 .selection-item {
