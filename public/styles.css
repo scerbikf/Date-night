@@ -101,6 +101,7 @@ body {
     flex: 1;
     position: relative;
     overflow: hidden;
+    min-height: calc(100vh - 80px);
 }
 
 .screen {
@@ -115,6 +116,8 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    min-height: 100%;
 }
 
 .screen.active {
@@ -209,6 +212,8 @@ body {
     gap: var(--spacing-sm);
     flex: 1;
     margin-bottom: var(--spacing-xl);
+    min-height: 400px;
+    padding-bottom: calc(80px + var(--spacing-xl));
 }
 
 .selection-item {
@@ -221,7 +226,7 @@ body {
     font-size: 1rem;
     font-weight: 500;
     text-align: center;
-    min-height: 60px;
+    min-height: 70px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -432,6 +437,16 @@ body {
     display: flex;
     gap: var(--spacing-md);
     margin-top: auto;
+    padding: var(--spacing-md) 0;
+    position: sticky;
+    bottom: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    margin-left: calc(-1 * var(--spacing-lg));
+    margin-right: calc(-1 * var(--spacing-lg));
+    margin-bottom: calc(-1 * var(--spacing-lg));
+    padding-left: var(--spacing-lg);
+    padding-right: var(--spacing-lg);
 }
 
 /* Result Screen */
@@ -578,7 +593,22 @@ body {
     
     .app-icon,
     .result-icon {
-        font-size: 3rem;
+        font-size: 5rem;
+    }
+    
+    .selection-item {
+        min-height: 80px;
+        font-size: 1.1rem;
+        padding: var(--spacing-xl);
+    }
+    
+    .action-buttons {
+        padding: var(--spacing-lg) var(--spacing-md);
+        margin-left: calc(-1 * var(--spacing-md));
+        margin-right: calc(-1 * var(--spacing-md));
+        margin-bottom: calc(-1 * var(--spacing-md));
+        padding-left: var(--spacing-md);
+        padding-right: var(--spacing-md);
     }
     
     .category-card {
