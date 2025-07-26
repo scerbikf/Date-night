@@ -1,52 +1,51 @@
-const categories = [
-    {
+const categories = {
+    films: {
         id: 1,
-        name: 'What to watch',
+        name: 'Filmy',
         items: [
             'Naruto',
-            'Oppenheimer',
-            'Spider-Man: No Way Home',
-            'The Batman',
-            'Top Gun: Maverick',
-            'Dune',
-            'No Time to Die',
-            'Fast & Furious 9',
-            'Black Widow',
-            'Eternals'
+            'Oppenheimer', 
+            'YouTube',
+            'The Other Boleyn Girl',
+            'Don\'t Look Up',
+            'Songbirds and Snakes',
+            'The Dark Knight'
         ]
     },
-    {
+    dishes: {
         id: 2,
-        name: 'Snacks',
+        name: 'Hlavné jedlo',
         items: [
-            'Popcorn',
-            'Chips',
-            'Candy',
-            'Nachos',
-            'Fruit',
-            'Chocolate',
-            'Ice cream',
-            'Cookies',
-            'Nuts',
-            'Pretzels'
+            'Pizzovníky a škoricovníky',
+            'Čína',
+            'Hamburger',
+            'Pizza',
+            'McDonald\'s'
         ]
     },
-    {
+    snacks: {
         id: 3,
-        name: 'Main Dishes',
+        name: 'Občerstvenie',
         items: [
-            'Pizza',
-            'Burgers',
-            'Pasta',
-            'Sushi',
-            'Salad',
-            'Tacos',
-            'Fried chicken',
-            'Chinese takeout',
-            'Indian curry',
-            'Thai food'
+            'Hrozno',
+            'Chrumky',
+            'Čučoriedky',
+            'Zmrzlina',
+            'Chipsy',
+            'Čokoláda'
+        ]
+    },
+    drinks: {
+        id: 4,
+        name: 'Nápoje',
+        items: [
+            { name: 'Beer', locked: true },
+            'Captain Morgan',
+            'Víno',
+            'Radler',
+            'Drinky'
         ]
     }
-];
+};
 
 export default categories;

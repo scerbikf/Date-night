@@ -1,17 +1,23 @@
 {
   "name": "date-night-webapp",
   "version": "2.0.0",
-  "description": "Mobilná aplikácia pre výber obsahu na date night s kategóriami filmov, jedla a občerstvenia",
-  "main": "index.html",
+  "description": "Mobilná aplikácia pre výber obsahu na date night s postupným výberom všetkých kategórií",
+  "main": "server.js",
   "scripts": {
-    "start": "live-server --port=3000 --host=0.0.0.0",
-    "dev": "live-server --port=3000 --host=0.0.0.0 --open=/",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "client": "live-server --port=3000 --host=0.0.0.0 --open=/",
     "build": "echo 'Static app - no build step needed'"
   },
   "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
     "live-server": "^1.2.1"
   },
-  "keywords": ["date-night", "mobile-app", "pwa", "entertainment"],
+  "keywords": ["date-night", "mobile-app", "pwa", "entertainment", "multi-step"],
   "author": "Filip Scerbik",
   "license": "MIT"
 }

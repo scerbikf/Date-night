@@ -26,40 +26,81 @@
         </header>
 
         <main class="app-main">
+            <!-- Welcome Screen -->
             <div id="welcome-screen" class="screen active">
                 <div class="welcome-content">
                     <div class="app-icon">💝</div>
-                    <h2>Čo si dnes vyberieme?</h2>
-                    <p>Vyber kategóriu a nájdi perfektný obsah pre váš večer</p>
-                    <button id="start-btn" class="primary-button">Začnime!</button>
+                    <h2>Plánujeme večer?</h2>
+                    <p>Vytvoríme pre vás perfektný večer podľa vašich preferencií</p>
+                    <button id="start-btn" class="primary-button">Make us evening ✨</button>
                 </div>
             </div>
 
-            <div id="categories-screen" class="screen">
+            <!-- Film Selection Screen -->
+            <div id="film-screen" class="screen">
                 <div class="screen-header">
-                    <h2>Vyberte kategóriu</h2>
+                    <h2>Čo si pozrieme?</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 25%"></div>
+                    </div>
                 </div>
-                <div id="category-grid" class="category-grid"></div>
-            </div>
-
-            <div id="items-screen" class="screen">
-                <div class="screen-header">
-                    <h2 id="category-title">Vyber si!</h2>
-                </div>
-                <div id="items-grid" class="items-grid"></div>
+                <div id="film-grid" class="selection-grid"></div>
                 <div class="action-buttons">
-                    <button id="random-pick-btn" class="secondary-button">🎲 Náhodný výber</button>
+                    <button id="film-next-btn" class="primary-button" disabled>Ďalej →</button>
                 </div>
             </div>
 
-            <div id="result-screen" class="screen">
-                <div class="result-content">
-                    <div class="result-icon">🎉</div>
-                    <h2>Váš výber:</h2>
-                    <div id="selected-item" class="selected-item"></div>
+            <!-- Main Dish Selection Screen -->
+            <div id="dish-screen" class="screen">
+                <div class="screen-header">
+                    <h2>Hlavné jedlo</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 50%"></div>
+                    </div>
+                </div>
+                <div id="dish-grid" class="selection-grid"></div>
+                <div class="action-buttons">
+                    <button id="dish-next-btn" class="primary-button" disabled>Ďalej →</button>
+                </div>
+            </div>
+
+            <!-- Snacks Selection Screen -->
+            <div id="snacks-screen" class="screen">
+                <div class="screen-header">
+                    <h2>Občerstvenie</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 75%"></div>
+                    </div>
+                </div>
+                <div id="snacks-grid" class="selection-grid"></div>
+                <div class="action-buttons">
+                    <button id="snacks-next-btn" class="primary-button" disabled>Ďalej →</button>
+                </div>
+            </div>
+
+            <!-- Drinks Selection Screen -->
+            <div id="drinks-screen" class="screen">
+                <div class="screen-header">
+                    <h2>Nápoje</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div id="drinks-grid" class="selection-grid"></div>
+                <div class="action-buttons">
+                    <button id="drinks-finish-btn" class="primary-button" disabled>Dokončiť 💕</button>
+                </div>
+            </div>
+
+            <!-- Final Result Screen -->
+            <div id="final-screen" class="screen">
+                <div class="final-content">
+                    <div class="pulsing-heart">💕</div>
+                    <h2>Váš večer je pripravený!</h2>
+                    <div id="final-summary" class="final-summary"></div>
                     <div class="result-actions">
-                        <button id="pick-again-btn" class="secondary-button">Vybrať znovu</button>
-                        <button id="new-category-btn" class="primary-button">Iná kategória</button>
+                        <button id="save-again-btn" class="secondary-button">Uložiť znovu</button>
+                        <button id="start-over-btn" class="primary-button">Nový večer</button>
                     </div>
                 </div>
             </div>

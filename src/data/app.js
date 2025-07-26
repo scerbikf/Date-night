@@ -3,25 +3,42 @@ import categories from './categories.js';
 class DateNightApp {
     constructor() {
         this.currentScreen = 'welcome';
-        this.selectedCategory = null;
-        this.selectedItem = null;
+        this.selections = {
+            films: [],
+            dishes: [],
+            snacks: [],
+            drinks: ['Beer'] // Beer is pre-selected and locked
+        };
+        
         this.screens = {
             welcome: document.getElementById('welcome-screen'),
-            categories: document.getElementById('categories-screen'),
-            items: document.getElementById('items-screen'),
-            result: document.getElementById('result-screen')
+            film: document.getElementById('film-screen'),
+            dish: document.getElementById('dish-screen'),
+            snacks: document.getElementById('snacks-screen'),
+            drinks: document.getElementById('drinks-screen'),
+            final: document.getElementById('final-screen')
         };
+        
         this.elements = {
             appTitle: document.getElementById('app-title'),
             backBtn: document.getElementById('back-btn'),
             startBtn: document.getElementById('start-btn'),
-            categoryGrid: document.getElementById('category-grid'),
-            categoryTitle: document.getElementById('category-title'),
-            itemsGrid: document.getElementById('items-grid'),
-            randomPickBtn: document.getElementById('random-pick-btn'),
-            selectedItem: document.getElementById('selected-item'),
-            pickAgainBtn: document.getElementById('pick-again-btn'),
-            newCategoryBtn: document.getElementById('new-category-btn')
+            
+            filmGrid: document.getElementById('film-grid'),
+            filmNextBtn: document.getElementById('film-next-btn'),
+            
+            dishGrid: document.getElementById('dish-grid'),
+            dishNextBtn: document.getElementById('dish-next-btn'),
+            
+            snacksGrid: document.getElementById('snacks-grid'),
+            snacksNextBtn: document.getElementById('snacks-next-btn'),
+            
+            drinksGrid: document.getElementById('drinks-grid'),
+            drinksFinishBtn: document.getElementById('drinks-finish-btn'),
+            
+            finalSummary: document.getElementById('final-summary'),
+            saveAgainBtn: document.getElementById('save-again-btn'),
+            startOverBtn: document.getElementById('start-over-btn')
         };
         
         this.init();
@@ -29,39 +46,52 @@ class DateNightApp {
 
     init() {
         this.setupEventListeners();
-        this.renderCategories();
+        this.renderGrids();
         this.showScreen('welcome');
     }
 
     setupEventListeners() {
-        // Navigation
+        // Start button
         this.elements.startBtn.addEventListener('click', () => {
-            this.showScreen('categories');
+            this.showScreen('film');
         });
 
+        // Back button
         this.elements.backBtn.addEventListener('click', () => {
             this.goBack();
         });
 
-        // Random pick
-        this.elements.randomPickBtn.addEventListener('click', () => {
-            this.randomPick();
+        // Next buttons
+        this.elements.filmNextBtn.addEventListener('click', () => {
+            this.showScreen('dish');
         });
 
-        // Result actions
-        this.elements.pickAgainBtn.addEventListener('click', () => {
-            this.showScreen('items');
+        this.elements.dishNextBtn.addEventListener('click', () => {
+            this.showScreen('snacks');
         });
 
-        this.elements.newCategoryBtn.addEventListener('click', () => {
-            this.showScreen('categories');
+        this.elements.snacksNextBtn.addEventListener('click', () => {
+            this.showScreen('drinks');
+        });
+
+        this.elements.drinksFinishBtn.addEventListener('click', () => {
+            this.finishSelection();
+        });
+
+        // Final screen buttons
+        this.elements.saveAgainBtn.addEventListener('click', () => {
+            this.saveData();
+        });
+
+        this.elements.startOverBtn.addEventListener('click', () => {
+            this.resetApp();
         });
     }
 
     showScreen(screenName) {
         // Hide all screens
         Object.values(this.screens).forEach(screen => {
-            screen.classList.remove('active', 'prev');
+            screen.classList.remove('active');
         });
 
         // Show target screen
@@ -75,15 +105,17 @@ class DateNightApp {
     updateNavigation(screenName) {
         const titles = {
             welcome: 'Date Night',
-            categories: 'Kategórie',
-            items: this.selectedCategory?.name || 'Výber',
-            result: 'Výsledok'
+            film: 'Výber filmu',
+            dish: 'Hlavné jedlo',
+            snacks: 'Občerstvenie',
+            drinks: 'Nápoje',
+            final: 'Hotovo!'
         };
 
         this.elements.appTitle.textContent = titles[screenName];
         
         // Show/hide back button
-        if (screenName === 'welcome') {
+        if (screenName === 'welcome' || screenName === 'final') {
             this.elements.backBtn.style.display = 'none';
         } else {
             this.elements.backBtn.style.display = 'flex';
@@ -92,9 +124,10 @@ class DateNightApp {
 
     goBack() {
         const navigation = {
-            categories: 'welcome',
-            items: 'categories',
-            result: 'items'
+            film: 'welcome',
+            dish: 'film',
+            snacks: 'dish',
+            drinks: 'snacks'
         };
 
         const previousScreen = navigation[this.currentScreen];
@@ -103,97 +136,200 @@ class DateNightApp {
         }
     }
 
-    renderCategories() {
-        this.elements.categoryGrid.innerHTML = '';
-        
-        categories.forEach(category => {
-            const categoryElement = this.createCategoryCard(category);
-            this.elements.categoryGrid.appendChild(categoryElement);
+    renderGrids() {
+        this.renderFilmGrid();
+        this.renderDishGrid();
+        this.renderSnacksGrid();
+        this.renderDrinksGrid();
+    }
+
+    renderFilmGrid() {
+        this.elements.filmGrid.innerHTML = '';
+        categories.films.items.forEach(item => {
+            const element = this.createSelectionItem(item, 'films');
+            this.elements.filmGrid.appendChild(element);
         });
     }
 
-    createCategoryCard(category) {
-        const card = document.createElement('div');
-        card.className = 'category-card';
+    renderDishGrid() {
+        this.elements.dishGrid.innerHTML = '';
+        categories.dishes.items.forEach(item => {
+            const element = this.createSelectionItem(item, 'dishes');
+            this.elements.dishGrid.appendChild(element);
+        });
+    }
+
+    renderSnacksGrid() {
+        this.elements.snacksGrid.innerHTML = '';
+        categories.snacks.items.forEach(item => {
+            const element = this.createSelectionItem(item, 'snacks');
+            this.elements.snacksGrid.appendChild(element);
+        });
+    }
+
+    renderDrinksGrid() {
+        this.elements.drinksGrid.innerHTML = '';
+        categories.drinks.items.forEach(item => {
+            const itemName = typeof item === 'object' ? item.name : item;
+            const isLocked = typeof item === 'object' && item.locked;
+            const element = this.createSelectionItem(itemName, 'drinks', isLocked);
+            this.elements.drinksGrid.appendChild(element);
+        });
+    }
+
+    createSelectionItem(item, category, isLocked = false) {
+        const element = document.createElement('div');
+        element.className = 'selection-item';
+        element.textContent = item;
+
+        if (isLocked) {
+            element.classList.add('locked', 'selected');
+            return element;
+        }
+
+        // Check if already selected
+        if (this.selections[category].includes(item)) {
+            element.classList.add('selected');
+        }
+
+        element.addEventListener('click', () => {
+            this.toggleSelection(item, category, element);
+        });
+
+        return element;
+    }
+
+    toggleSelection(item, category, element) {
+        const index = this.selections[category].indexOf(item);
         
-        const icons = {
-            'What to watch': '🎬',
-            'Snacks': '🍿',
-            'Main Dishes': '🍽️'
+        if (index > -1) {
+            // Remove from selection
+            this.selections[category].splice(index, 1);
+            element.classList.remove('selected');
+        } else {
+            // Add to selection
+            this.selections[category].push(item);
+            element.classList.add('selected');
+        }
+
+        this.updateNextButton(category);
+    }
+
+    updateNextButton(category) {
+        const buttons = {
+            films: this.elements.filmNextBtn,
+            dishes: this.elements.dishNextBtn,
+            snacks: this.elements.snacksNextBtn,
+            drinks: this.elements.drinksFinishBtn
         };
 
-        card.innerHTML = `
-            <div class="category-icon">${icons[category.name] || '📱'}</div>
-            <h3>${category.name}</h3>
-        `;
-
-        card.addEventListener('click', () => {
-            this.selectCategory(category);
-        });
-
-        return card;
-    }
-
-    selectCategory(category) {
-        this.selectedCategory = category;
-        this.renderItems(category);
-        this.showScreen('items');
-    }
-
-    renderItems(category) {
-        this.elements.categoryTitle.textContent = category.name;
-        this.elements.itemsGrid.innerHTML = '';
-
-        category.items.forEach(item => {
-            const itemElement = this.createItemCard(item);
-            this.elements.itemsGrid.appendChild(itemElement);
-        });
-    }
-
-    createItemCard(item) {
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.textContent = item;
-
-        card.addEventListener('click', () => {
-            this.selectItem(item);
-        });
-
-        return card;
-    }
-
-    selectItem(item) {
-        // Remove previous selection
-        const previouslySelected = this.elements.itemsGrid.querySelector('.selected');
-        if (previouslySelected) {
-            previouslySelected.classList.remove('selected');
+        const button = buttons[category];
+        if (button) {
+            button.disabled = this.selections[category].length === 0;
         }
-
-        // Add selection to clicked item
-        const itemCards = Array.from(this.elements.itemsGrid.children);
-        const clickedCard = itemCards.find(card => card.textContent === item);
-        if (clickedCard) {
-            clickedCard.classList.add('selected');
-        }
-
-        this.selectedItem = item;
-        this.showResult(item);
     }
 
-    randomPick() {
-        if (!this.selectedCategory || this.selectedCategory.items.length === 0) {
-            return;
-        }
+    async finishSelection() {
+        await this.saveData();
+        this.renderFinalSummary();
+        this.showScreen('final');
+    }
 
-        const randomIndex = Math.floor(Math.random() * this.selectedCategory.items.length);
-        const randomItem = this.selectedCategory.items[randomIndex];
+    renderFinalSummary() {
+        const summary = document.createElement('div');
         
-        this.selectItem(randomItem);
+        Object.keys(this.selections).forEach(categoryKey => {
+            if (this.selections[categoryKey].length > 0) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'summary-category';
+                
+                const title = document.createElement('h4');
+                title.textContent = categories[categoryKey].name;
+                categoryDiv.appendChild(title);
+                
+                const itemsDiv = document.createElement('div');
+                itemsDiv.className = 'summary-items';
+                
+                this.selections[categoryKey].forEach(item => {
+                    const tag = document.createElement('span');
+                    tag.className = 'summary-tag';
+                    tag.textContent = item;
+                    itemsDiv.appendChild(tag);
+                });
+                
+                categoryDiv.appendChild(itemsDiv);
+                summary.appendChild(categoryDiv);
+            }
+        });
+        
+        this.elements.finalSummary.innerHTML = '';
+        this.elements.finalSummary.appendChild(summary);
     }
 
-    showResult(item) {
-        this.elements.selectedItem.textContent = item;
-        this.showScreen('result');
+    async saveData() {
+        const data = {
+            timestamp: new Date().toISOString(),
+            selections: this.selections,
+            userAgent: navigator.userAgent
+        };
+
+        try {
+            // Save to localStorage as backup
+            localStorage.setItem('dateNightSelections', JSON.stringify(data));
+            
+            // Try to save to external service (replace with your actual endpoint)
+            await this.sendToDatabase(data);
+            
+            console.log('Data saved successfully:', data);
+            alert('Údaje boli úspešne uložené! 💕');
+        } catch (error) {
+            console.error('Error saving data:', error);
+            alert('Údaje boli uložené lokálne. Skúste znovu neskôr.');
+        }
+    }
+
+    async sendToDatabase(data) {
+        // Use local API endpoint
+        const endpoint = '/api/save-evening';
+        
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            console.log('Successfully saved to database:', result);
+            return result;
+        } catch (error) {
+            console.error('Failed to save to database:', error);
+            throw error;
+        }
+    }
+
+    resetApp() {
+        this.selections = {
+            films: [],
+            dishes: [],
+            snacks: [],
+            drinks: ['Beer']
+        };
+        
+        this.renderGrids();
+        this.showScreen('welcome');
+        
+        // Reset button states
+        this.elements.filmNextBtn.disabled = true;
+        this.elements.dishNextBtn.disabled = true;
+        this.elements.snacksNextBtn.disabled = true;
+        this.elements.drinksFinishBtn.disabled = false; // Beer is pre-selected
     }
 }
 
