@@ -83,9 +83,11 @@ class DateNightApp {
         });
 
         // Final screen buttons
-        this.elements.startOverBtn.addEventListener('click', () => {
-            this.resetApp();
-        });
+        if (this.elements.startOverBtn) {
+            this.elements.startOverBtn.addEventListener('click', () => {
+                this.resetApp();
+            });
+        }
     }
 
     showScreen(screenName) {
