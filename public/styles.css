@@ -137,10 +137,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
     flex: 1;
     gap: var(--spacing-xl);
+    padding-top: var(--spacing-2xl);
 }
 
 /* App Icon */
@@ -154,7 +155,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 2rem;
+    margin: 0 auto var(--spacing-lg);
     box-shadow: 0 12px 32px rgba(236, 72, 153, 0.3);
     position: relative;
     animation: heartbeat 2s ease-in-out infinite;
@@ -261,28 +262,29 @@ body {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     margin-bottom: var(--spacing-xl);
-    padding-bottom: calc(120px + env(safe-area-inset-bottom)); /* Extra space for fixed buttons */
-    max-height: calc(100vh - 200px);
+    padding-bottom: calc(100px + env(safe-area-inset-bottom)); /* Space for fixed buttons */
+    max-height: calc(100vh - 180px);
 }
 
 /* Mobile viewport adjustments for grid */
 @supports (height: 100dvh) {
     .selection-grid {
-        max-height: calc(100dvh - 200px);
-        padding-bottom: calc(100px + env(safe-area-inset-bottom) + 2vh);
+        max-height: calc(100dvh - 180px);
+        padding-bottom: calc(90px + env(safe-area-inset-bottom));
     }
 }
 
 @media (max-height: 600px) {
     .selection-grid {
-        padding-bottom: calc(90px + env(safe-area-inset-bottom));
-        max-height: calc(100vh - 160px);
+        padding-bottom: calc(80px + env(safe-area-inset-bottom));
+        max-height: calc(100vh - 140px);
     }
 }
 
 @media (min-height: 800px) {
     .selection-grid {
-        padding-bottom: calc(130px + env(safe-area-inset-bottom));
+        padding-bottom: calc(100px + env(safe-area-inset-bottom));
+        max-height: calc(100vh - 200px);
     }
 }
 
