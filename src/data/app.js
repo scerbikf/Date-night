@@ -286,10 +286,10 @@ class DateNightApp {
             await this.sendToDatabase(data);
             
             console.log('Data saved successfully:', data);
-            alert('Údaje boli úspešne uložené! 💕');
+            // Údaje sa pošlú do admin rozhrania automaticky
         } catch (error) {
             console.error('Error saving data:', error);
-            alert('Údaje boli uložené lokálne. Skúste znovu neskôr.');
+            // Backup je uložený lokálne
         }
     }
 

@@ -117,7 +117,9 @@ body {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    min-height: 100%;
+    -webkit-overflow-scrolling: touch;
+    height: 100vh;
+    max-height: 100vh;
 }
 
 .screen.active {
@@ -141,7 +143,7 @@ body {
 }
 
 .app-icon {
-    font-size: 6rem;
+    font-size: 10rem;
     margin-bottom: var(--spacing-lg);
     filter: drop-shadow(0 4px 8px rgba(236, 72, 153, 0.3));
     animation: heartBeat 2s ease-in-out infinite;
@@ -211,9 +213,11 @@ body {
     grid-template-columns: 1fr;
     gap: var(--spacing-sm);
     flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     margin-bottom: var(--spacing-xl);
-    min-height: 400px;
     padding-bottom: calc(80px + var(--spacing-xl));
+    max-height: calc(100vh - 200px);
 }
 
 .selection-item {
