@@ -1,15 +1,17 @@
 {
   "name": "date-night-webapp",
-  "version": "1.0.0",
-  "description": "A web application to help choose activities for a date night, including categories like movies, snacks, and main dishes.",
-  "main": "src/app.js",
+  "version": "2.0.0",
+  "description": "Mobilná aplikácia pre výber obsahu na date night s kategóriami filmov, jedla a občerstvenia",
+  "main": "index.html",
   "scripts": {
-    "start": "live-server public",
-    "build": "echo 'Build step not defined yet.'"
+    "start": "live-server --port=3000 --host=0.0.0.0",
+    "dev": "live-server --port=3000 --host=0.0.0.0 --open=/",
+    "build": "echo 'Static app - no build step needed'"
   },
   "dependencies": {
     "live-server": "^1.2.1"
   },
-  "author": "Your Name",
+  "keywords": ["date-night", "mobile-app", "pwa", "entertainment"],
+  "author": "Filip Scerbik",
   "license": "MIT"
 }

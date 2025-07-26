@@ -1,28 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date Night Picker</title>
+    <title>Date Night App</title>
     <link rel="stylesheet" href="public/styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff6f61">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Date Night">
 </head>
 <body>
-    <header>
-        <h1>Date Night Picker</h1>
-    </header>
-    <main>
-        <section id="categories">
-            <h2>Choose a Category</h2>
-            <ul id="category-list"></ul>
-        </section>
-        <section id="items" style="display: none;">
-            <h2>Pick One!</h2>
-            <ul id="item-list"></ul>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2025 Made with ❤️</p>
-    </footer>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <button id="back-btn" class="back-button" style="display: none;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <h1 id="app-title">Date Night</h1>
+                <div class="header-spacer"></div>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <div id="welcome-screen" class="screen active">
+                <div class="welcome-content">
+                    <div class="app-icon">💝</div>
+                    <h2>Čo si dnes vyberieme?</h2>
+                    <p>Vyber kategóriu a nájdi perfektný obsah pre váš večer</p>
+                    <button id="start-btn" class="primary-button">Začnime!</button>
+                </div>
+            </div>
+
+            <div id="categories-screen" class="screen">
+                <div class="screen-header">
+                    <h2>Vyberte kategóriu</h2>
+                </div>
+                <div id="category-grid" class="category-grid"></div>
+            </div>
+
+            <div id="items-screen" class="screen">
+                <div class="screen-header">
+                    <h2 id="category-title">Vyber si!</h2>
+                </div>
+                <div id="items-grid" class="items-grid"></div>
+                <div class="action-buttons">
+                    <button id="random-pick-btn" class="secondary-button">🎲 Náhodný výber</button>
+                </div>
+            </div>
+
+            <div id="result-screen" class="screen">
+                <div class="result-content">
+                    <div class="result-icon">🎉</div>
+                    <h2>Váš výber:</h2>
+                    <div id="selected-item" class="selected-item"></div>
+                    <div class="result-actions">
+                        <button id="pick-again-btn" class="secondary-button">Vybrať znovu</button>
+                        <button id="new-category-btn" class="primary-button">Iná kategória</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <script type="module" src="src/data/app.js"></script>
 </body>
 </html>

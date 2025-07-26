@@ -4,7 +4,15 @@ const categories = [
         name: 'What to watch',
         items: [
             'Naruto',
-            'Oppenheimer'
+            'Oppenheimer',
+            'Spider-Man: No Way Home',
+            'The Batman',
+            'Top Gun: Maverick',
+            'Dune',
+            'No Time to Die',
+            'Fast & Furious 9',
+            'Black Widow',
+            'Eternals'
         ]
     },
     {
@@ -15,7 +23,12 @@ const categories = [
             'Chips',
             'Candy',
             'Nachos',
-            'Fruit'
+            'Fruit',
+            'Chocolate',
+            'Ice cream',
+            'Cookies',
+            'Nuts',
+            'Pretzels'
         ]
     },
     {
@@ -26,7 +39,12 @@ const categories = [
             'Burgers',
             'Pasta',
             'Sushi',
-            'Salad'
+            'Salad',
+            'Tacos',
+            'Fried chicken',
+            'Chinese takeout',
+            'Indian curry',
+            'Thai food'
         ]
     }
 ];
