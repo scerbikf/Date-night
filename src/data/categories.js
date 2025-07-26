@@ -17,10 +17,11 @@ const categories = {
         name: 'Hlavné jedlo',
         items: [
             'Pizzovníky a škoricovníky',
+            'Spaghetti Carbonara',
             'Čína',
             'Hamburger',
             'Pizza',
-            'McDonald\'s'
+            'McDonald'
         ]
     },
     snacks: {
