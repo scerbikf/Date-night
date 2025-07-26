@@ -42,7 +42,6 @@ class DateNightApp {
             drinksFinishBtn: document.getElementById('drinks-finish-btn'),
             
             finalSummary: document.getElementById('final-summary'),
-            saveAgainBtn: document.getElementById('save-again-btn'),
             startOverBtn: document.getElementById('start-over-btn')
         };
         
@@ -84,10 +83,6 @@ class DateNightApp {
         });
 
         // Final screen buttons
-        this.elements.saveAgainBtn.addEventListener('click', () => {
-            this.saveData();
-        });
-
         this.elements.startOverBtn.addEventListener('click', () => {
             this.resetApp();
         });

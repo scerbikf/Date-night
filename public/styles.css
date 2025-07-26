@@ -443,7 +443,7 @@ body {
     margin-top: auto;
     padding: var(--spacing-md) 0;
     position: sticky;
-    bottom: 0;
+    bottom: 20px;
     background: var(--surface);
     border-top: 1px solid var(--border);
     margin-left: calc(-1 * var(--spacing-lg));
@@ -451,6 +451,7 @@ body {
     margin-bottom: calc(-1 * var(--spacing-lg));
     padding-left: var(--spacing-lg);
     padding-right: var(--spacing-lg);
+    z-index: 10;
 }
 
 /* Result Screen */
