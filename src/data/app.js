@@ -538,13 +538,27 @@ class DateNightApp {
     renderFinalSummary() {
         const summary = document.createElement('div');
         
+        // Define category names as fallback
+        const categoryNames = {
+            platforms: 'Streamovacie platformy',
+            genres: 'Žánre', 
+            films: 'Filmy',
+            dishes: 'Hlavné jedlo',
+            snacks: 'Občerstvenie',
+            drinks: 'Nápoje'
+        };
+        
         Object.keys(this.selections).forEach(categoryKey => {
             if (this.selections[categoryKey].length > 0) {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'summary-category';
                 
                 const title = document.createElement('h4');
-                title.textContent = categories[categoryKey].name;
+                // Use fallback name if category doesn't exist in categories object
+                const categoryName = (categories[categoryKey] && categories[categoryKey].name) 
+                    ? categories[categoryKey].name 
+                    : categoryNames[categoryKey] || categoryKey;
+                title.textContent = categoryName;
                 categoryDiv.appendChild(title);
                 
                 const itemsDiv = document.createElement('div');
