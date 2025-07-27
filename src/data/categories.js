@@ -1,6 +1,16 @@
 const categories = {
-    films: {
+    platforms: {
+        id: 0,
+        name: 'Streamovacie platformy',
+        items: [] // Dynamic from TMDB
+    },
+    genres: {
         id: 1,
+        name: 'Žánre',
+        items: [] // Dynamic from TMDB
+    },
+    films: {
+        id: 2,
         name: 'Filmy',
         items: [
             'Naruto',
@@ -13,7 +23,7 @@ const categories = {
         ]
     },
     dishes: {
-        id: 2,
+        id: 3,
         name: 'Hlavné jedlo',
         items: [
             'Pizzovníky a škoricovníky',
@@ -25,7 +35,7 @@ const categories = {
         ]
     },
     snacks: {
-        id: 3,
+        id: 4,
         name: 'Občerstvenie',
         items: [
             'Hrozno',
@@ -37,7 +47,7 @@ const categories = {
         ]
     },
     drinks: {
-        id: 4,
+        id: 5,
         name: 'Nápoje',
         items: [
             'Pivo',
