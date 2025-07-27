@@ -88,7 +88,7 @@ class TMDBService {
     }
 
     // Discover movies based on platforms and genres
-    async discoverMovies(selectedPlatforms = [], selectedGenres = [], page = 1) {
+    async discoverMovies(selectedPlatforms = [], selectedGenres = [], maxResults = 100, sortBy = 'popularity.desc') {
         try {
             const providerIds = selectedPlatforms
                 .map(platformId => this.providers[platformId])
@@ -97,28 +97,61 @@ class TMDBService {
             
             const genreIds = selectedGenres.join('|');
             
-            let url = `${this.baseUrl}/discover/movie?api_key=${this.apiKey}&language=sk-SK&page=${page}&sort_by=popularity.desc`;
+            let allMovies = [];
+            let currentPage = 1;
+            const maxPages = Math.ceil(maxResults / 20); // API returns ~20 results per page
             
-            if (providerIds) {
-                url += `&with_watch_providers=${providerIds}&watch_region=SK`;
+            while (allMovies.length < maxResults && currentPage <= maxPages && currentPage <= 10) {
+                let url = `${this.baseUrl}/discover/movie?api_key=${this.apiKey}&language=sk-SK&page=${currentPage}&sort_by=${sortBy}`;
+                
+                if (providerIds) {
+                    url += `&with_watch_providers=${providerIds}&watch_region=SK`;
+                }
+                
+                if (genreIds) {
+                    url += `&with_genres=${genreIds}`;
+                }
+                
+                // Add quality filters
+                url += '&vote_count.gte=10'; // At least 10 votes
+                url += '&primary_release_date.gte=1990-01-01'; // Movies from 1990 onwards
+                
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (!data.results || data.results.length === 0) {
+                    break; // No more results
+                }
+                
+                allMovies = allMovies.concat(data.results);
+                currentPage++;
+                
+                // Break if we've reached the total pages available
+                if (currentPage > data.total_pages) {
+                    break;
+                }
             }
-            
-            if (genreIds) {
-                url += `&with_genres=${genreIds}`;
-            }
-            
-            const response = await fetch(url);
-            const data = await response.json();
             
             return {
-                movies: data.results || [],
-                totalPages: data.total_pages || 1,
-                totalResults: data.total_results || 0
+                movies: allMovies.slice(0, maxResults),
+                totalPages: Math.ceil(allMovies.length / 20),
+                totalResults: allMovies.length
             };
         } catch (error) {
             console.error('Error discovering movies:', error);
             return { movies: [], totalPages: 1, totalResults: 0 };
         }
+    }
+
+    // Get available sort options
+    getSortOptions() {
+        return [
+            { id: 'popularity.desc', name: 'Najobľúbenejšie' },
+            { id: 'vote_average.desc', name: 'Najlepšie hodnotené' },
+            { id: 'primary_release_date.desc', name: 'Najnovšie' },
+            { id: 'revenue.desc', name: 'Najúspešnejšie' },
+            { id: 'vote_count.desc', name: 'Najviac hodnotené' }
+        ];
     }
 
     // Get movie details

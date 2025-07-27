@@ -10,6 +10,7 @@ class DateNightApp {
         this.version = APP_VERSION;
         this.currentScreen = 'welcome';
         this.tmdb = new TMDBService();
+        this.currentSort = 'popularity.desc'; // Default sorting
         this.selections = {
             platforms: [],
             genres: [],
@@ -54,7 +55,9 @@ class DateNightApp {
             drinksFinishBtn: document.getElementById('drinks-finish-btn'),
             
             finalSummary: document.getElementById('final-summary'),
-            startOverBtn: document.getElementById('start-over-btn')
+            startOverBtn: document.getElementById('start-over-btn'),
+            
+            actionButtons: document.getElementById('action-buttons')
         };
         
         this.init();
@@ -126,7 +129,52 @@ class DateNightApp {
 
         // Update navigation
         this.updateNavigation(screenName);
+        this.updateActionButtons(screenName);
         this.currentScreen = screenName;
+    }
+
+    updateActionButtons(screenName) {
+        // Hide action buttons container first
+        const actionButtonsContainer = document.querySelector('.action-buttons');
+        
+        // Hide all individual buttons
+        const allButtons = [
+            'platform-next-btn',
+            'genre-next-btn', 
+            'film-next-btn',
+            'dish-next-btn',
+            'snacks-next-btn',
+            'drinks-finish-btn'
+        ];
+        
+        allButtons.forEach(id => {
+            const btn = document.getElementById(id);
+            if (btn) btn.style.display = 'none';
+        });
+
+        // Show container and appropriate button based on screen
+        if (screenName === 'platform') {
+            actionButtonsContainer.style.display = 'flex';
+            document.getElementById('platform-next-btn').style.display = 'block';
+        } else if (screenName === 'genre') {
+            actionButtonsContainer.style.display = 'flex';
+            document.getElementById('genre-next-btn').style.display = 'block';
+        } else if (screenName === 'film') {
+            actionButtonsContainer.style.display = 'flex';
+            document.getElementById('film-next-btn').style.display = 'block';
+        } else if (screenName === 'dish') {
+            actionButtonsContainer.style.display = 'flex';
+            document.getElementById('dish-next-btn').style.display = 'block';
+        } else if (screenName === 'snacks') {
+            actionButtonsContainer.style.display = 'flex';
+            document.getElementById('snacks-next-btn').style.display = 'block';
+        } else if (screenName === 'drinks') {
+            actionButtonsContainer.style.display = 'flex';
+            document.getElementById('drinks-finish-btn').style.display = 'block';
+        } else {
+            // For welcome and final screens, hide action buttons
+            actionButtonsContainer.style.display = 'none';
+        }
     }
 
     updateNavigation(screenName) {
@@ -141,7 +189,8 @@ class DateNightApp {
             final: '💕 Hotovo!'
         };
 
-        this.elements.appTitle.textContent = titles[screenName];
+        this.elements.appTitle.textContent = "Date Night";
+        this.elements.appTitle.classList.add('primary-color');
         
         // Show/hide back button
         if (screenName === 'welcome' || screenName === 'final') {
@@ -229,40 +278,34 @@ class DateNightApp {
     }
 
     async loadMoviesAndShowFilmScreen() {
-        if (this.selections.platforms.length === 0 && this.selections.genres.length === 0) {
-            alert('Vyberte aspoň jednu platformu alebo žáner');
-            return;
-        }
-
-        // Show loading
-        this.elements.genreNextBtn.textContent = 'Načítavam filmy...';
-        this.elements.genreNextBtn.disabled = true;
-
         try {
+            this.showScreen('film');
+            
+            // Show loading
+            this.elements.filmGrid.innerHTML = '<p style="text-align: center; padding: 2rem;">Načítavam filmy...</p>';
+            
             // If "All genres" is selected, pass empty array to get all genres
             const genresToSearch = this.selections.genres.includes('all') ? [] : this.selections.genres;
             
             const result = await this.tmdb.discoverMovies(
                 this.selections.platforms,
-                genresToSearch
+                genresToSearch,
+                100,
+                this.currentSort
             );
 
             // Convert TMDB movies to our format
             this.movieData = result.movies.map(movie => this.tmdb.formatMovie(movie));
             
-            // Render movies in film grid
+            // Render movies
             this.renderMovieGrid();
             
-            // Show film screen
-            this.showScreen('film');
+            // Add sort selector
+            this.addSortSelector();
             
         } catch (error) {
             console.error('Error loading movies:', error);
-            alert('Chyba pri načítavaní filmov. Skúste to znova.');
-        } finally {
-            // Reset button
-            this.elements.genreNextBtn.textContent = 'Nájsť filmy →';
-            this.elements.genreNextBtn.disabled = false;
+            this.elements.filmGrid.innerHTML = '<p style="text-align: center; padding: 2rem; color: red;">Chyba pri načítavaní filmov.</p>';
         }
     }
 
@@ -274,7 +317,7 @@ class DateNightApp {
             return;
         }
 
-        this.movieData.slice(0, 20).forEach(movie => { // Show first 20 movies
+        this.movieData.slice(0, 80).forEach(movie => { // Show first 80 movies
             const element = this.createMovieItem(movie);
             this.elements.filmGrid.appendChild(element);
         });
@@ -504,6 +547,77 @@ class DateNightApp {
             console.log('Data saved successfully:', data);
         } catch (error) {
             console.error('Error saving data:', error);
+        }
+    }
+
+    addSortSelector() {
+        const filmScreen = this.screens.film;
+        const screenHeader = filmScreen.querySelector('.screen-header');
+        
+        // Remove existing sort selector if any
+        const existingSelector = screenHeader.querySelector('.sort-selector');
+        if (existingSelector) {
+            existingSelector.remove();
+        }
+        
+        // Create sort selector container
+        const sortContainer = document.createElement('div');
+        sortContainer.className = 'sort-selector';
+        
+        const sortLabel = document.createElement('label');
+        sortLabel.textContent = 'Zoradiť podľa:';
+        sortLabel.className = 'sort-label';
+        
+        const sortSelect = document.createElement('select');
+        sortSelect.className = 'sort-select';
+        
+        // Add sort options
+        const sortOptions = this.tmdb.getSortOptions();
+        sortOptions.forEach(option => {
+            const optionElement = document.createElement('option');
+            optionElement.value = option.id;
+            optionElement.textContent = option.name;
+            if (option.id === this.currentSort) {
+                optionElement.selected = true;
+            }
+            sortSelect.appendChild(optionElement);
+        });
+        
+        // Add event listener for sort change
+        sortSelect.addEventListener('change', async (e) => {
+            this.currentSort = e.target.value;
+            await this.reloadMoviesWithSort();
+        });
+        
+        sortContainer.appendChild(sortLabel);
+        sortContainer.appendChild(sortSelect);
+        screenHeader.appendChild(sortContainer);
+    }
+
+    async reloadMoviesWithSort() {
+        try {
+            // Show loading
+            this.elements.filmGrid.innerHTML = '<p style="text-align: center; padding: 2rem;">Načítavam filmy...</p>';
+            
+            // If "All genres" is selected, pass empty array to get all genres
+            const genresToSearch = this.selections.genres.includes('all') ? [] : this.selections.genres;
+            
+            const result = await this.tmdb.discoverMovies(
+                this.selections.platforms,
+                genresToSearch,
+                100,
+                this.currentSort
+            );
+
+            // Convert TMDB movies to our format
+            this.movieData = result.movies.map(movie => this.tmdb.formatMovie(movie));
+            
+            // Render updated movies
+            this.renderMovieGrid();
+            
+        } catch (error) {
+            console.error('Error reloading movies:', error);
+            this.elements.filmGrid.innerHTML = '<p style="text-align: center; padding: 2rem; color: red;">Chyba pri načítavaní filmov.</p>';
         }
     }
 
