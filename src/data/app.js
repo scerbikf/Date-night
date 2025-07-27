@@ -80,6 +80,14 @@ class DateNightApp {
         this.renderGrids();
         this.showScreen('welcome');
         
+        // Set initial button states
+        this.elements.platformNextBtn.disabled = true;
+        this.elements.genreNextBtn.disabled = true;
+        this.elements.filmNextBtn.disabled = true;
+        this.elements.dishNextBtn.disabled = true;
+        this.elements.snacksNextBtn.disabled = true;
+        this.elements.drinksFinishBtn.disabled = false; // Beer is pre-selected
+        
         console.log('Date Night App initialized successfully!');
     }
 
