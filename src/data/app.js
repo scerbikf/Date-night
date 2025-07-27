@@ -2,7 +2,7 @@ import categories from './categories.js';
 import TMDBService from './tmdb-service.js';
 
 // App version for cache busting
-const APP_VERSION = '3.0';
+const APP_VERSION = '3.2';
 console.log(`Date Night App v${APP_VERSION} loaded`);
 
 class DateNightApp {
