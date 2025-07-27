@@ -40,7 +40,7 @@ const categories = {
         id: 4,
         name: 'Nápoje',
         items: [
-            { name: 'Beer', locked: true },
+            'Pivo',
             'Captain Morgan',
             'Víno',
             'Radler',

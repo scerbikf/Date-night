@@ -19,7 +19,7 @@ class DateNightApp {
             films: [],
             dishes: [],
             snacks: [],
-            drinks: ['Beer'] // Beer is pre-selected and locked
+            drinks: [] // No pre-selected drinks
         };
         
         this.screens = {
@@ -86,7 +86,7 @@ class DateNightApp {
         this.elements.filmNextBtn.disabled = true;
         this.elements.dishNextBtn.disabled = true;
         this.elements.snacksNextBtn.disabled = true;
-        this.elements.drinksFinishBtn.disabled = false; // Beer is pre-selected
+        this.elements.drinksFinishBtn.disabled = true; // No drinks pre-selected
         
         console.log('Date Night App initialized successfully!');
     }
@@ -738,7 +738,7 @@ class DateNightApp {
             films: [],
             dishes: [],
             snacks: [],
-            drinks: ['Beer']
+            drinks: []
         };
         
         this.renderGrids();
@@ -750,7 +750,7 @@ class DateNightApp {
         this.elements.filmNextBtn.disabled = true;
         this.elements.dishNextBtn.disabled = true;
         this.elements.snacksNextBtn.disabled = true;
-        this.elements.drinksFinishBtn.disabled = false; // Beer is pre-selected
+        this.elements.drinksFinishBtn.disabled = true; // No drinks pre-selected
     }
 }
 
