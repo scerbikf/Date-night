@@ -1,5 +1,6 @@
 import categories from './categories.js';
 import TMDBService from './tmdb-service.js';
+import DatabaseService from './database-service.js';
 
 // App version for cache busting
 const APP_VERSION = '3.0';
@@ -10,6 +11,7 @@ class DateNightApp {
         this.version = APP_VERSION;
         this.currentScreen = 'welcome';
         this.tmdb = new TMDBService();
+        this.db = new DatabaseService(); // Add database service
         this.currentSort = 'popularity.desc'; // Default sorting
         this.selections = {
             platforms: [],
@@ -63,10 +65,22 @@ class DateNightApp {
         this.init();
     }
 
-    init() {
+    async init() {
+        console.log('Initializing Date Night App...');
+        
+        // Initialize database session
+        try {
+            await this.db.initializeSession();
+            console.log('✅ Database session initialized');
+        } catch (error) {
+            console.warn('⚠️ Database initialization failed, continuing without DB:', error);
+        }
+        
         this.setupEventListeners();
         this.renderGrids();
         this.showScreen('welcome');
+        
+        console.log('Date Night App initialized successfully!');
     }
 
     setupEventListeners() {
@@ -470,6 +484,21 @@ class DateNightApp {
         }
 
         this.updateNextButton(category);
+        
+        // Progressive saving - save to database when selections change
+        this.saveProgressiveSelection(category);
+    }
+
+    // Save selections progressively as user makes them
+    async saveProgressiveSelection(category) {
+        try {
+            if (this.selections[category].length > 0) {
+                console.log(`💾 Progressive save: ${category}`, this.selections[category]);
+                await this.db.saveSelections(category, this.selections[category]);
+            }
+        } catch (error) {
+            console.warn(`⚠️ Progressive save failed for ${category}:`, error);
+        }
     }
 
     updateNextButton(category) {
@@ -537,6 +566,8 @@ class DateNightApp {
     }
 
     async saveData() {
+        console.log('💾 Saving data to database...');
+        
         const data = {
             id: Date.now().toString(),
             timestamp: new Date().toISOString(),
@@ -545,14 +576,43 @@ class DateNightApp {
         };
 
         try {
-            // Save to localStorage
+            // Save each category to database
+            const savePromises = [];
+            
+            if (this.selections.platforms.length > 0) {
+                savePromises.push(this.db.saveSelections('platforms', this.selections.platforms));
+            }
+            if (this.selections.genres.length > 0) {
+                savePromises.push(this.db.saveSelections('genres', this.selections.genres));
+            }
+            if (this.selections.films.length > 0) {
+                savePromises.push(this.db.saveSelections('films', this.selections.films));
+            }
+            if (this.selections.dishes.length > 0) {
+                savePromises.push(this.db.saveSelections('dishes', this.selections.dishes));
+            }
+            if (this.selections.snacks.length > 0) {
+                savePromises.push(this.db.saveSelections('snacks', this.selections.snacks));
+            }
+            if (this.selections.drinks.length > 0) {
+                savePromises.push(this.db.saveSelections('drinks', this.selections.drinks));
+            }
+
+            // Wait for all saves to complete
+            await Promise.all(savePromises);
+            
+            // Mark as completed
+            await this.db.completeSelection();
+            
+            console.log('✅ All data saved to database successfully');
+            
+            // Also save to localStorage as backup
             let savedData = [];
             const existing = localStorage.getItem('dateNightHistory');
             if (existing) {
                 savedData = JSON.parse(existing);
             }
             
-            // Add new entry
             savedData.push(data);
             
             // Keep only last 50 entries
@@ -563,9 +623,32 @@ class DateNightApp {
             localStorage.setItem('dateNightHistory', JSON.stringify(savedData));
             localStorage.setItem('dateNightSelections', JSON.stringify(data));
             
-            console.log('Data saved successfully:', data);
+            console.log('✅ Backup saved to localStorage');
+            
         } catch (error) {
-            console.error('Error saving data:', error);
+            console.error('❌ Error saving data:', error);
+            
+            // Fallback to localStorage only
+            try {
+                let savedData = [];
+                const existing = localStorage.getItem('dateNightHistory');
+                if (existing) {
+                    savedData = JSON.parse(existing);
+                }
+                
+                savedData.push(data);
+                
+                if (savedData.length > 50) {
+                    savedData = savedData.slice(-50);
+                }
+                
+                localStorage.setItem('dateNightHistory', JSON.stringify(savedData));
+                localStorage.setItem('dateNightSelections', JSON.stringify(data));
+                
+                console.log('⚠️ Saved to localStorage only (database unavailable)');
+            } catch (localError) {
+                console.error('❌ Failed to save even to localStorage:', localError);
+            }
         }
     }
 
