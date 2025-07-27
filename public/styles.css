@@ -264,7 +264,7 @@ body {
 .selection-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs); /* Smaller gap for mobile */
     min-height: min-content; /* Allow grid to expand based on content */
 }
 
@@ -290,13 +290,13 @@ body {
 }
 
 .platform-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-sm);
     margin-bottom: 0;
 }
 
 .genre-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: var(--spacing-xs);
     margin-bottom: 0;
     min-height: min-content; /* Allow grid to expand based on content */
@@ -1040,6 +1040,31 @@ body {
         min-height: 36px; /* Smaller height on mobile */
         font-size: 0.8rem; /* Smaller font on mobile */
         padding: var(--spacing-xs) var(--spacing-sm); /* Smaller padding on mobile */
+    }
+    
+    /* Mobile grid layouts - 2 items per row for food categories */
+    .selection-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 items per row on mobile */
+        gap: var(--spacing-sm);
+    }
+    
+    .platform-grid {
+        grid-template-columns: repeat(2, 1fr); /* Keep platforms as 2 per row */
+        gap: var(--spacing-sm);
+    }
+    
+    .genre-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 genres per row */
+        gap: var(--spacing-sm);
+    }
+    
+    /* Larger items for mobile to fit 2 per row nicely */
+    .selection-item {
+        min-height: 70px; /* Better height for 2 columns */
+        font-size: 0.85rem; /* Readable font size */
+        padding: var(--spacing-sm); /* Comfortable padding */
+        word-break: break-word; /* Break long words */
+        hyphens: auto; /* Enable hyphenation */
     }
     
     .welcome-content {

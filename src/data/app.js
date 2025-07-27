@@ -57,7 +57,7 @@ class DateNightApp {
             finalSummary: document.getElementById('final-summary'),
             startOverBtn: document.getElementById('start-over-btn'),
             
-            actionButtons: document.getElementById('action-buttons')
+            actionButtons: document.querySelector('.action-buttons')
         };
         
         this.init();
@@ -107,6 +107,7 @@ class DateNightApp {
 
         // Drinks buttons
         this.elements.drinksFinishBtn.addEventListener('click', () => {
+            console.log('Drinks finish button clicked!');
             this.finishSelection();
         });
 
@@ -119,13 +120,20 @@ class DateNightApp {
     }
 
     showScreen(screenName) {
+        console.log('showScreen called with:', screenName);
+        
         // Hide all screens
         Object.values(this.screens).forEach(screen => {
             screen.classList.remove('active');
         });
 
         // Show target screen
-        this.screens[screenName].classList.add('active');
+        if (this.screens[screenName]) {
+            this.screens[screenName].classList.add('active');
+            console.log('Screen activated:', screenName);
+        } else {
+            console.error('Screen not found:', screenName);
+        }
 
         // Update navigation
         this.updateNavigation(screenName);
@@ -480,10 +488,21 @@ class DateNightApp {
         }
     }
 
-    async finishSelection() {
-        await this.saveData();
+    finishSelection() {
+        console.log('finishSelection called');
+        
+        // Save data without blocking
+        this.saveData().catch(error => {
+            console.error('Error saving data:', error);
+        });
+        
+        console.log('About to render final summary');
         this.renderFinalSummary();
+        
+        console.log('About to show final screen');
         this.showScreen('final');
+        
+        console.log('Final screen should be visible now');
     }
 
     renderFinalSummary() {
