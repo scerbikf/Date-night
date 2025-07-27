@@ -127,6 +127,69 @@
             });
         }
 
+        // Show update loader
+        function showUpdateLoader() {
+            // Create loader overlay
+            const loaderOverlay = document.createElement('div');
+            loaderOverlay.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(254, 247, 240, 0.95);
+                    backdrop-filter: blur(10px);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 9999;
+                    font-family: 'Inter', sans-serif;
+                ">
+                    <div style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 1.5rem;
+                    ">
+                        <div style="
+                            width: 60px;
+                            height: 60px;
+                            border: 4px solid #f3e8ff;
+                            border-top: 4px solid #ec4899;
+                            border-radius: 50%;
+                            animation: spin 1s linear infinite;
+                        "></div>
+                        <div style="
+                            width: 40px;
+                            height: 40px;
+                            background: linear-gradient(135deg, #ec4899, #f472b6);
+                            border-radius: 50%;
+                            animation: pulse 1.5s ease-in-out infinite;
+                            margin-top: -20px;
+                        "></div>
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                    @keyframes pulse {
+                        0%, 100% { transform: scale(0.8); opacity: 0.7; }
+                        50% { transform: scale(1.2); opacity: 1; }
+                    }
+                </style>
+            `;
+            
+            document.body.appendChild(loaderOverlay);
+            
+            // Auto reload after 2 seconds
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
+
         // Listen for screen changes
         document.addEventListener('DOMContentLoaded', function() {
             const observer = new MutationObserver(function(mutations) {
@@ -163,10 +226,8 @@
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    // New version available, reload page
-                                    if (confirm('Nová verzia aplikácie je dostupná. Chcete ju načítať?')) {
-                                        window.location.reload();
-                                    }
+                                    // New version available, show custom loader
+                                    showUpdateLoader();
                                 }
                             });
                         });
