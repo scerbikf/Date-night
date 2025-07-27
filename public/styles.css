@@ -586,9 +586,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
     flex: 1;
+    padding-top: 50px;
     gap: var(--spacing-xl);
 }
 
