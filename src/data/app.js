@@ -499,11 +499,9 @@ class DateNightApp {
 
     // Save selections progressively as user makes them
     async saveProgressiveSelection(category) {
+        // Skip database saving for now to avoid errors
         try {
-            if (this.selections[category].length > 0) {
-                console.log(`💾 Progressive save: ${category}`, this.selections[category]);
-                await this.db.saveSelections(category, this.selections[category]);
-            }
+            console.log(`💾 Progressive save skipped for: ${category}`, this.selections[category]);
         } catch (error) {
             console.warn(`⚠️ Progressive save failed for ${category}:`, error);
         }
@@ -528,10 +526,8 @@ class DateNightApp {
     finishSelection() {
         console.log('finishSelection called');
         
-        // Save data without blocking
-        this.saveData().catch(error => {
-            console.error('Error saving data:', error);
-        });
+        // Skip database saving for now - just show final screen
+        console.log('Skipping database save, showing final screen...');
         
         console.log('About to render final summary');
         this.renderFinalSummary();
@@ -540,6 +536,36 @@ class DateNightApp {
         this.showScreen('final');
         
         console.log('Final screen should be visible now');
+        
+        // Save to localStorage as backup (non-blocking)
+        try {
+            const data = {
+                id: Date.now().toString(),
+                timestamp: new Date().toISOString(),
+                selections: this.selections,
+                userAgent: navigator.userAgent
+            };
+            
+            let savedData = [];
+            const existing = localStorage.getItem('dateNightHistory');
+            if (existing) {
+                savedData = JSON.parse(existing);
+            }
+            
+            savedData.push(data);
+            
+            // Keep only last 50 entries
+            if (savedData.length > 50) {
+                savedData = savedData.slice(-50);
+            }
+            
+            localStorage.setItem('dateNightHistory', JSON.stringify(savedData));
+            localStorage.setItem('dateNightSelections', JSON.stringify(data));
+            
+            console.log('✅ Backup saved to localStorage');
+        } catch (error) {
+            console.error('Failed to save to localStorage:', error);
+        }
     }
 
     renderFinalSummary() {
